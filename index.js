@@ -20,6 +20,7 @@ module.exports = class KappaCoreEventBus {
     opt = Object.assign({
       storage: ram,
       tail: false,
+      download: true,
       live: true
     }, opt)
 
@@ -55,7 +56,7 @@ module.exports = class KappaCoreEventBus {
             d.swarm('connection : peer id', info.id.toString('hex'))
 
             let isInitiator = info.initiator
-            let stream = core.replicate(isInitiator, { live: this.live })
+            let stream = core.replicate(isInitiator, { live: this.live, download: this.download })
 
             stream.on('remote-feeds', () => {
               d.swarm(
@@ -87,7 +88,7 @@ module.exports = class KappaCoreEventBus {
     // Local bus
     const bus = new EventEmitter()
 
-    Object.assign(this, { sw, name, core, bus, live: opt.live, tail: opt.tail })
+    Object.assign(this, { sw, name, core, bus, live: opt.live, tail: opt.tail, download: opt.download })
   }
 
   feedToEvents (feed) {
