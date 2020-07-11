@@ -15,7 +15,7 @@ const d = {
   events: debug(`${EVENT_BUS_NS}:events`)
 }
 
-module.exports = class SwarmEventBus {
+module.exports = class KappaCoreEventBus {
   constructor (name, opt = {}) {
     opt = Object.assign({
       storage: ram,
