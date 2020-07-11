@@ -117,7 +117,8 @@ module.exports = class SwarmEventBus {
 
       this.feed.append({
         event,
-        data: args
+        data: args,
+        timestamp: new Date()
       })
     })
   }
