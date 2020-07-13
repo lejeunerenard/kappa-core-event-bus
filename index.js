@@ -1,5 +1,6 @@
 const { EventEmitter } = require('events')
-const swarm = require('discovery-swarm')
+const swarm = require('hyperswarm')
+const crypto = require('crypto')
 const kappa = require('kappa-core')
 const hypercore = require('hypercore')
 const multifeed = require('multifeed')
@@ -47,24 +48,25 @@ module.exports = class KappaCoreEventBus {
         d.node('my feed', feed.key.toString('hex'))
 
         core.ready(() => {
+          const topic = crypto.createHash('sha256')
+            .update(name)
+            .digest()
+
           // Join swarm
-          sw.join(name)
+          sw.join(topic, {
+            lookup: true,
+            announce: true
+          })
 
           sw.on('connection', (connection, info) => {
-            d.swarm('Peer Found')
+            d.swarm('Peer Found', sw.connections.size + ' total')
 
-            d.swarm('connection : peer id', info.id.toString('hex'))
-
-            let isInitiator = info.initiator
+            let isInitiator = info.client
             let stream = core.replicate(isInitiator, { live: this.live, download: this.download })
 
-            stream.on('remote-feeds', () => {
-              d.swarm(
-                'replicating with peer id', info.id.toString('hex').substring(0, 10),
-                'my feed', this.feed.key.toString('hex').substring(0, 10) )
+            pump(connection, stream, connection, (err) => {
+              if (err) { d.swarm('ERROR', err) }
             })
-
-            pump(connection, stream, connection)
           })
 
           // --- Send events from feed ---
