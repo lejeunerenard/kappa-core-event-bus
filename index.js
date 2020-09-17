@@ -22,7 +22,8 @@ module.exports = class KappaCoreEventBus {
       storage: ram,
       tail: false,
       download: true,
-      live: true
+      live: true,
+      networkTimeoutMS: 10 * 60 * 1000 // 10 mins
     }, opt)
 
     assert.ok(name, 'name not defined')
@@ -67,6 +68,18 @@ module.exports = class KappaCoreEventBus {
             pump(connection, stream, connection, (err) => {
               if (err) { d.swarm('ERROR', err) }
             })
+          })
+
+          let networkLostTimeout = null
+          sw.on('disconnection', (socket, info) => {
+            clearTimeout(networkLostTimeout)
+
+            if (sw.connections.length === 0) {
+              networkLostTimeout = setTimeout(() => {
+                console.error('Network lost! I have no peers.')
+                process.exit(1)
+              })
+            }
           })
 
           // --- Send events from feed ---
