@@ -14,6 +14,7 @@
     "hypercore": "^9.5.0",
     "hyperswarm": "^2.15.0",
     "kappa-core": "^6.0.0",
+    "multifeed": "^6.0.0",
     "pump": "^3.0.0",
     "random-access-memory": "^3.1.1"
   }
