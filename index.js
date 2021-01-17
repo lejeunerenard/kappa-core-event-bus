@@ -90,6 +90,7 @@ module.exports = class KappaCoreEventBus {
 
           // Future feeds
           mf.on('feed', (feed, name) => {
+            d.node('# feeds', mf.feeds().length)
             feed.update(() => {
               this.feedToEvents(feed)
             })
@@ -107,6 +108,7 @@ module.exports = class KappaCoreEventBus {
   }
 
   feedToEvents (feed) {
+    d.node('convert feed to events', feed.key.toString('hex').substring(0, 10))
     feed.createReadStream({
       live: this.live,
       tail: this.tail
