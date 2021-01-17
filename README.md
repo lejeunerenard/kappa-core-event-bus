@@ -30,3 +30,7 @@ bus.on('event-name', (data) => {
   console.log('foo', data.foo) // prints: bar
 })
 ```
+
+## License
+
+ISC
