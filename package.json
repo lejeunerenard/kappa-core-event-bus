@@ -8,7 +8,7 @@
   },
   "keywords": [],
   "author": "Sean Zellmer <sean@lejeunerenard.com> (http://lejeunerenard.com/)",
-  "license": "MIT",
+  "license": "ISC",
   "dependencies": {
     "debug": "^4.1.1",
     "hypercore": "^9.5.0",
